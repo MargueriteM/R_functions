@@ -20,7 +20,7 @@
 # 5: 0.07554791      NaN  47.33667  23.96258  48.84647  25.85045 85.90324
 # 6: 0.07541457      NaN  40.41320  23.61629  41.30637  28.74641 85.90845
 
-savebiomet <- function(data) {
+savebiomet <- function(data,startyear,endyear) {
   
   # make all NaNs be NA
   data [is.na(data)] <- NA
@@ -45,7 +45,7 @@ savebiomet <- function(data) {
               timestamp_4 = sprintf ("%02d",timestamp_4),
               timestamp_5 = sprintf ("%02d",timestamp_5))]
   
-  for (i in 2010:2019){
+  for (i in startyear:endyear){
     # subset each year and convert all columns in data to characters so the unit row can be added
     data1 <- data[timestamp_1==i,lapply(.SD, as.character)]
     
@@ -60,11 +60,12 @@ savebiomet <- function(data) {
     
     # save with columns in prescribed order
     write.table (data1[,.(timestamp_1, timestamp_2, timestamp_3,timestamp_4,timestamp_5,
-                          Ta,RH,WD,MWS,PPFD,PPFDr,P_rain,SWC_1_1_1, Ts_1_1_1,
+                          Ta,RH,Pa,WD,MWS,PPFD,PPFDr,P_rain,SWC_1_1_1, Ts_1_1_1,
                           SHF_1_1_1, SHF_1_2_1, SHF_2_2_1, SHF_2_2_1,LWin,LWout,SWin,SWout,Rn)],
                  file=paste("Biomet_EddyPro_",i, ".csv",sep=""),
                  sep =',', dec='.', row.names=FALSE, na="-9999", quote=FALSE)
   }}
+
 
 # save each year
 savebiomet(biomet)
